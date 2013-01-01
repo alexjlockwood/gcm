@@ -1,20 +1,20 @@
-go-gcm
+gcm
 ======
 
-The Android SDK provides a nice convenience library ([com.google.android.gcm.server](http://developer.android.com/reference/com/google/android/gcm/server/package-summary.html)) that greatly simplifies the interaction between Java-based application servers and Google's GCM servers. However, Google has not provided much support for application servers implemented in languages other than Java, specifically those written in the Go programming language. go-gcm helps to fill in this gap. This library provides a simple interface for sending GCM messages and automatically retries requests in case of service unavailability using exponential backoff.
+The Android SDK provides a nice convenience library ([com.google.android.gcm.server](http://developer.android.com/reference/com/google/android/gcm/server/package-summary.html)) that greatly simplifies the interaction between Java-based application servers and Google's GCM servers. However, Google has not provided much support for application servers implemented in languages other than Java, specifically those written in the Go programming language. The gcm package helps to fill in this gap, providing a simple interface for sending GCM messages and automatically retrying requests in case of service unavailability.
 
-Documentation: http://godoc.org/github.com/alexjlockwood/go-gcm
+Documentation: http://godoc.org/github.com/alexjlockwood/gcm
 
 Getting Started
 ---------------
 
-To install go-gcm, use `go get`:
+To install gcm, use `go get`:
 
-    go get github.com/alexjlockwood/go-gcm
+    go get github.com/alexjlockwood/gcm
 
-Import go-gcm with the following:
+Import gcm with the following:
 
-    import "github.com/alexjlockwood/go-gcm/gcm"
+    import "github.com/alexjlockwood/gcm"
 
 Sample Usage
 ------------
@@ -26,7 +26,7 @@ Here is a quick sample illustrating how to send a message to the GCM server:
     import (
         "fmt"
         "net/http"
-        "github.com/alexjlockwood/go-gcm/gcm"
+        "github.com/alexjlockwood/gcm"
     )
     
     func main() {
@@ -58,6 +58,7 @@ If your application server runs on Google AppEngine, you must import the `appeng
     import (
         "appengine"
         "appengine/urlfetch"
+        "github.com/alexjlockwood/gcm"
     )
 
     func handler(w http.ResponseWriter, r *http.Request) {
