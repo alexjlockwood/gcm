@@ -38,11 +38,7 @@ Here is a quick sample illustrating how to send a message to the GCM server:
         // Create a Sender to send the message
         sender := &gcm.NewSender("sample_api_key")
         
-        // Send the message and receive the response. If the results indicate
-        // a service unavailibility error (i.e. if one or more of the result's 
-        // Error field is "Unavailable"), the message will be resent at most
-        // two times. Note that the message will be retried using exponential 
-        // backoff, and thus may block for several seconds.
+        // Send the message and receive the response after at most two retries.
         response, err := sender.Send(msg, 2)
         if err != nil {
             fmt.Println("Failed to send message: " + err.Error())
