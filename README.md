@@ -1,5 +1,5 @@
 gcm
-======
+===
 
 The Android SDK provides a nice convenience library ([com.google.android.gcm.server](http://developer.android.com/reference/com/google/android/gcm/server/package-summary.html)) that greatly simplifies the interaction between Java-based application servers and Google's GCM servers. However, Google has not provided much support for application servers implemented in languages other than Java, specifically those written in the Go programming language. The gcm package helps to fill in this gap, providing a simple interface for sending GCM messages and automatically retrying requests in case of service unavailability.
 
@@ -31,7 +31,7 @@ Here is a quick sample illustrating how to send a message to the GCM server:
     
     func main() {
         // Create the message to be sent
-        regIds := []string{"4","8","15","16","23","32"}
+        regIds := []string{"4","8","15","16","23","42"}
         data := map[string]string{"score": "5x1", "time": "15:10"}
         msg := gcm.NewMessage(data, regIds...)
 
