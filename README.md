@@ -22,13 +22,13 @@ Sample Usage
 Here is a quick sample illustrating how to send a message to the GCM server:
 
     package sample
-    
+
     import (
         "fmt"
         "net/http"
         "github.com/alexjlockwood/gcm"
     )
-    
+
     func main() {
         // Create the message to be sent
         regIds := []string{"4","8","15","16","23","42"}
@@ -37,12 +37,12 @@ Here is a quick sample illustrating how to send a message to the GCM server:
 
         // Create a Sender to send the message
         sender := &gcm.Sender({"sample_api_key"})
-        
+
         // Send the message and receive the response after at most two retries.
         response, err := sender.Send(msg, 2)
         if err != nil {
             fmt.Println("Failed to send message: " + err.Error())
-            return       
+            return
         }
     }
 
@@ -65,4 +65,4 @@ If your application server runs on Google AppEngine, you must import the `appeng
         sender := &gcm.ender({"sample_api_key", client})
 
         /* ... */
-    }        
+    }
