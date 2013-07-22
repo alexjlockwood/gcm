@@ -36,7 +36,7 @@ Here is a quick sample illustrating how to send a message to the GCM server:
         msg := gcm.NewMessage(data, regIds...)
 
         // Create a Sender to send the message
-        sender := &gcm.NewSender("sample_api_key")
+        sender := &gcm.Sender({"sample_api_key"})
         
         // Send the message and receive the response after at most two retries.
         response, err := sender.Send(msg, 2)
@@ -62,7 +62,7 @@ If your application server runs on Google AppEngine, you must import the `appeng
 
         c := appengine.NewContext(r)
         client := urlfetch.Client(c)
-        sender := gcm.NewSender("sample_api_key", client)
+        sender := &gcm.ender({"sample_api_key", client})
 
         /* ... */
     }        
