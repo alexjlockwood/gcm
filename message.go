@@ -2,8 +2,8 @@
 
 package gcm
 
-// Message is used by the application server to send a message to 
-// the GCM server. See the documentation for GCM Architectural 
+// Message is used by the application server to send a message to
+// the GCM server. See the documentation for GCM Architectural
 // Overview for more information:
 // http://developer.android.com/google/gcm/gcm.html#send-msg
 type Message struct {
@@ -16,7 +16,7 @@ type Message struct {
 	DryRun                bool              `json:"dry_run,omitempty"`
 }
 
-// NewMessage returns a new Message with the specified payload 
+// NewMessage returns a new Message with the specified payload
 // and registration ids.
 func NewMessage(data map[string]string, regIds ...string) *Message {
 	return &Message{RegistrationIDs: regIds, Data: data}
