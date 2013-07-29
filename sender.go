@@ -1,6 +1,6 @@
 // Copyright 2013 Alex Lockwood. All rights reserved.
 
-// Google Cloud Messaging for application servers implemented using the 
+// Google Cloud Messaging for application servers implemented using the
 // Go programming language.
 package gcm
 
@@ -25,19 +25,19 @@ const (
 )
 
 // Sender abstracts the interaction between the application server and the
-// GCM server. The developer must obtain an API key from the Google APIs 
+// GCM server. The developer must obtain an API key from the Google APIs
 // Console page and pass it to the Sender so that it can perform authorized
 // requests on the application server's behalf. To send a message to one or
 // more devices use the Sender's Send or SendNoRetry methods.
 //
 // If the Http field is nil, a zeroed http.Client will be allocated and used
-// to send messages (i.e. new(http.Client)). If your application server 
-// runs on Google AppEngine, you MUST use the "appengine/urlfetch" package 
+// to send messages (i.e. new(http.Client)). If your application server
+// runs on Google AppEngine, you MUST use the "appengine/urlfetch" package
 // to create the *http.Client as follows:
 //
 //	func handler(w http.ResponseWriter, r *http.Request) {
 //		/* ... */
-//		
+//
 //		c := appengine.NewContext(r)
 //		client := urlfetch.Client(c)
 //		sender := &gcm.Sender{ApiKey: apiKey, Http: client}
@@ -92,7 +92,7 @@ func (s *Sender) SendNoRetry(msg *Message) (*Response, error) {
 }
 
 // Send sends a message to the GCM server, retrying in case of service
-// unavailability. A non-nil error is returned if a non-recoverable 
+// unavailability. A non-nil error is returned if a non-recoverable
 // error occurs (i.e. if the response status is not "200 OK").
 //
 // Note that messages are retried using exponential backoff, and as a
@@ -198,7 +198,7 @@ func checkMessage(msg *Message) error {
 	if msg == nil {
 		return errors.New("The message must not be nil.")
 	} else if msg.RegistrationIDs == nil {
-		return errors.New("The essage's RegistrationIDs field must not be nil.")
+		return errors.New("The message's RegistrationIDs field must not be nil.")
 	} else if len(msg.RegistrationIDs) == 0 {
 		return errors.New("The message must specify at least one registration ID.")
 	} else if len(msg.RegistrationIDs) > 1000 {

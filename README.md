@@ -10,59 +10,67 @@ Getting Started
 
 To install gcm, use `go get`:
 
-    go get github.com/alexjlockwood/gcm
+```bash
+go get github.com/alexjlockwood/gcm
+```
 
 Import gcm with the following:
 
-    import "github.com/alexjlockwood/gcm"
+```go
+import "github.com/alexjlockwood/gcm"
+```
 
 Sample Usage
 ------------
 
 Here is a quick sample illustrating how to send a message to the GCM server:
 
-    package sample
-    
-    import (
-        "fmt"
-        "net/http"
-        "github.com/alexjlockwood/gcm"
-    )
-    
-    func main() {
-        // Create the message to be sent
-        regIds := []string{"4","8","15","16","23","42"}
-        data := map[string]string{"score": "5x1", "time": "15:10"}
-        msg := gcm.NewMessage(data, regIds...)
+```go
+package sample
 
-        // Create a Sender to send the message
-        sender := &gcm.NewSender("sample_api_key")
-        
-        // Send the message and receive the response after at most two retries.
-        response, err := sender.Send(msg, 2)
-        if err != nil {
-            fmt.Println("Failed to send message: " + err.Error())
-            return       
-        }
-    }
+import (
+	"fmt"
+	"net/http"
+	"github.com/alexjlockwood/gcm"
+)
+
+func main() {
+	// Create the message to be sent
+	regIds := []string{"4", "8", "15", "16", "23", "42"}
+	data := map[string]string{"score": "5x1", "time": "15:10"}
+	msg := gcm.NewMessage(data, regIds...)
+
+	// Create a Sender to send the message
+	sender := &gcm.Sender{"sample_api_key"}
+
+	// Send the message and receive the response after at most two retries.
+	response, err := sender.Send(msg, 2)
+	if err != nil {
+		fmt.Println("Failed to send message: " + err.Error())
+		return
+	}
+}
+```
 
 Note for Google AppEngine users
 -------------------------------
 
 If your application server runs on Google AppEngine, you must import the `appengine/urlfetch` package and create the `Sender` as follows:
 
-    import (
-        "appengine"
-        "appengine/urlfetch"
-        "github.com/alexjlockwood/gcm"
-    )
+```go
+import (
+	"appengine"
+	"appengine/urlfetch"
+	"github.com/alexjlockwood/gcm"
+)
 
-    func handler(w http.ResponseWriter, r *http.Request) {
-        /* ... */
+func handler(w http.ResponseWriter, r *http.Request) {
+	/* ... */
 
-        c := appengine.NewContext(r)
-        client := urlfetch.Client(c)
-        sender := gcm.NewSender("sample_api_key", client)
+	c := appengine.NewContext(r)
+	client := urlfetch.Client(c)
+	sender := &gcm.ender{"sample_api_key", client}
 
-        /* ... */
-    }        
+	/* ... */
+}
+```

@@ -2,9 +2,9 @@
 
 package gcm
 
-// Response represents the GCM server's response to the application 
-// server's sent message. See the documentation for GCM Architectural 
-// Overview for more information: 
+// Response represents the GCM server's response to the application
+// server's sent message. See the documentation for GCM Architectural
+// Overview for more information:
 // http://developer.android.com/google/gcm/gcm.html#send-msg
 type Response struct {
 	MulticastID  int64    `json:"multicast_id"`
