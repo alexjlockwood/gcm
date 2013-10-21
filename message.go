@@ -9,7 +9,7 @@ package gcm
 type Message struct {
 	RegistrationIDs       []string          `json:"registration_ids"`
 	CollapseKey           string            `json:"collapse_key,omitempty"`
-	Data                  map[string]string `json:"data,omitempty"`
+	Data                  map[string]interface{} `json:"data,omitempty"`
 	DelayWhileIdle        bool              `json:"delay_while_idle,omitempty"`
 	TimeToLive            int               `json:"time_to_live,omitempty"`
 	RestrictedPackageName string            `json:"restricted_package_name,omitempty"`
@@ -18,6 +18,6 @@ type Message struct {
 
 // NewMessage returns a new Message with the specified payload
 // and registration ids.
-func NewMessage(data map[string]string, regIds ...string) *Message {
+func NewMessage(data map[string]interface{}, regIds ...string) *Message {
 	return &Message{RegistrationIDs: regIds, Data: data}
 }
