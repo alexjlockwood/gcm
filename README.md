@@ -41,7 +41,7 @@ func main() {
     msg := gcm.NewMessage(data, regIds...)
 
     // Create a Sender to send the message
-    sender := &gcm.Sender("sample_api_key")
+    sender := &gcm.Sender{ApiKey:"sample_api_key"}
 
     // Send the message and receive the response after at most two retries.
     response, err := sender.Send(msg, 2)
