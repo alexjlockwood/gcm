@@ -30,12 +30,10 @@ const (
 //
 // If the Http field is nil, a zeroed http.Client will be allocated and used
 // to send messages. If your application server runs on Google AppEngine,
-// you MUST use the "appengine/urlfetch" package to create the *http.Client
+// you must use the "appengine/urlfetch" package to create the *http.Client
 // as follows:
 //
 //	func handler(w http.ResponseWriter, r *http.Request) {
-//		/* ... */
-//
 //		c := appengine.NewContext(r)
 //		client := urlfetch.Client(c)
 //		sender := &gcm.Sender{ApiKey: key, Http: client}
@@ -113,9 +111,9 @@ func (s *Sender) Send(msg *Message, retries int) (*Response, error) {
 	}
 
 	// One or more messages failed to send.
-	var regIDs = msg.RegistrationIDs
-	var allResults = make(map[string]Result, len(regIDs))
-	var backoff = backoffInitialDelay
+	regIDs := msg.RegistrationIDs
+	allResults := make(map[string]Result, len(regIDs))
+	backoff := backoffInitialDelay
 	for i := 0; updateStatus(msg, resp, allResults) > 0 || i < retries; i++ {
 		sleepTime := backoff/2 + rand.Intn(backoff)
 		time.Sleep(time.Duration(sleepTime) * time.Millisecond)
@@ -129,14 +127,14 @@ func (s *Sender) Send(msg *Message, retries int) (*Response, error) {
 	msg.RegistrationIDs = regIDs
 
 	// Create a Response containing the overall results.
-	var success, failure, canonicalIds int
-	var finalResults = make([]Result, len(regIDs))
+	finalResults := make([]Result, len(regIDs))
+	var success, failure, canonicalIDs int
 	for i := 0; i < len(regIDs); i++ {
 		result, _ := allResults[regIDs[i]]
 		finalResults[i] = result
 		if result.MessageID != "" {
 			if result.RegistrationID != "" {
-				canonicalIds++
+				canonicalIDs++
 			}
 			success++
 		} else {
@@ -149,7 +147,7 @@ func (s *Sender) Send(msg *Message, retries int) (*Response, error) {
 		MulticastID:  resp.MulticastID,
 		Success:      success,
 		Failure:      failure,
-		CanonicalIDs: canonicalIds,
+		CanonicalIDs: canonicalIDs,
 		Results:      finalResults,
 	}, nil
 }
