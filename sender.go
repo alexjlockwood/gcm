@@ -31,16 +31,16 @@ const (
 // more devices use the Sender's Send or SendNoRetry methods.
 //
 // If the Http field is nil, a zeroed http.Client will be allocated and used
-// to send messages (i.e. new(http.Client)). If your application server
-// runs on Google AppEngine, you MUST use the "appengine/urlfetch" package
-// to create the *http.Client as follows:
+// to send messages. If your application server runs on Google AppEngine,
+// you MUST use the "appengine/urlfetch" package to create the *http.Client
+// as follows:
 //
 //	func handler(w http.ResponseWriter, r *http.Request) {
 //		/* ... */
 //
 //		c := appengine.NewContext(r)
 //		client := urlfetch.Client(c)
-//		sender := &gcm.Sender{ApiKey: apiKey, Http: client}
+//		sender := &gcm.Sender{ApiKey: key, Http: client}
 //
 //		/* ... */
 //	}
@@ -106,7 +106,7 @@ func (s *Sender) Send(msg *Message, retries int) (*Response, error) {
 		return nil, errors.New("'retries' must not be negative.")
 	}
 
-	// Send the message for the first time
+	// Send the message for the first time.
 	resp, err := s.SendNoRetry(msg)
 	if err != nil {
 		return nil, err
@@ -114,9 +114,9 @@ func (s *Sender) Send(msg *Message, retries int) (*Response, error) {
 		return resp, nil
 	}
 
-	// One or more messages failed to send
-	var regIds = msg.RegistrationIDs
-	var allResults = make(map[string]Result, len(regIds))
+	// One or more messages failed to send.
+	var regIDs = msg.RegistrationIDs
+	var allResults = make(map[string]Result, len(regIDs))
 	var backoff = backoffInitialDelay
 	for i := 0; updateStatus(msg, resp, allResults) > 0 || i < retries; i++ {
 		sleepTime := backoff/2 + rand.Intn(backoff)
@@ -127,14 +127,14 @@ func (s *Sender) Send(msg *Message, retries int) (*Response, error) {
 		}
 	}
 
-	// Bring the message back to its original state
-	msg.RegistrationIDs = regIds
+	// Bring the message back to its original state.
+	msg.RegistrationIDs = regIDs
 
-	// Create a Response containing the overall results
+	// Create a Response containing the overall results.
 	var success, failure, canonicalIds int
-	var finalResults = make([]Result, len(regIds))
-	for i := 0; i < len(regIds); i++ {
-		result, _ := allResults[regIds[i]]
+	var finalResults = make([]Result, len(regIDs))
+	for i := 0; i < len(regIDs); i++ {
+		result, _ := allResults[regIDs[i]]
 		finalResults[i] = result
 		if result.MessageID != "" {
 			if result.RegistrationID != "" {
@@ -147,7 +147,7 @@ func (s *Sender) Send(msg *Message, retries int) (*Response, error) {
 	}
 
 	return &Response{
-		// return the most recent multicast id
+		// Return the most recent multicast id.
 		MulticastID:  resp.MulticastID,
 		Success:      success,
 		Failure:      failure,
@@ -159,16 +159,16 @@ func (s *Sender) Send(msg *Message, retries int) (*Response, error) {
 // updateStatus updates the status of the messages sent to devices and
 // returns the number of recoverable errors that could be retried.
 func updateStatus(msg *Message, resp *Response, allResults map[string]Result) int {
-	var unsentRegIds = make([]string, 0, resp.Failure)
+	var unsentRegIDs = make([]string, 0, resp.Failure)
 	for i := 0; i < len(resp.Results); i++ {
-		regId := msg.RegistrationIDs[i]
-		allResults[regId] = resp.Results[i]
+		regID := msg.RegistrationIDs[i]
+		allResults[regID] = resp.Results[i]
 		if resp.Results[i].Error == "Unavailable" {
-			unsentRegIds = append(unsentRegIds, regId)
+			unsentRegIDs = append(unsentRegIDs, regID)
 		}
 	}
-	msg.RegistrationIDs = unsentRegIds
-	return len(unsentRegIds)
+	msg.RegistrationIDs = unsentRegIDs
+	return len(unsentRegIDs)
 }
 
 // min returns the smaller of two integers. For exciting religious wars
@@ -185,7 +185,7 @@ func min(a, b int) int {
 // initializes a zeroed http.Client if one has not been provided.
 func checkSender(sender *Sender) error {
 	if sender.ApiKey == "" {
-		return errors.New("The sender's API key must not be empty.")
+		return errors.New("the sender's API key must not be empty")
 	}
 	if sender.Http == nil {
 		sender.Http = new(http.Client)
@@ -196,16 +196,16 @@ func checkSender(sender *Sender) error {
 // checkMessage returns an error if the message is not well-formed.
 func checkMessage(msg *Message) error {
 	if msg == nil {
-		return errors.New("The message must not be nil.")
+		return errors.New("the message must not be nil")
 	} else if msg.RegistrationIDs == nil {
-		return errors.New("The message's RegistrationIDs field must not be nil.")
+		return errors.New("the message's RegistrationIDs field must not be nil")
 	} else if len(msg.RegistrationIDs) == 0 {
-		return errors.New("The message must specify at least one registration ID.")
+		return errors.New("the message must specify at least one registration ID")
 	} else if len(msg.RegistrationIDs) > 1000 {
-		return errors.New("The message may specify at most 1000 registration IDs.")
+		return errors.New("the message may specify at most 1000 registration IDs")
 	} else if msg.TimeToLive < 0 || 2419200 < msg.TimeToLive {
-		return errors.New("The message's TimeToLive field must be an integer " +
-			"between 0 and 2419200 (4 weeks).")
+		return errors.New("the message's TimeToLive field must be an integer " +
+			"between 0 and 2419200 (4 weeks)")
 	}
 	return nil
 }

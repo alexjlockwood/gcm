@@ -17,7 +17,7 @@ type Message struct {
 }
 
 // NewMessage returns a new Message with the specified payload
-// and registration ids.
-func NewMessage(data map[string]interface{}, regIds ...string) *Message {
-	return &Message{RegistrationIDs: regIds, Data: data}
+// and registration IDs.
+func NewMessage(data map[string]interface{}, regIDs ...string) *Message {
+	return &Message{RegistrationIDs: regIDs, Data: data}
 }
