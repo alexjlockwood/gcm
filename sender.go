@@ -119,6 +119,7 @@ func (s *Sender) Send(msg *Message, retries int) (*Response, error) {
 		time.Sleep(time.Duration(sleepTime) * time.Millisecond)
 		backoff = min(2*backoff, maxBackoffDelay)
 		if resp, err = s.SendNoRetry(msg); err != nil {
+			msg.RegistrationIDs = regIDs
 			return nil, err
 		}
 	}
