@@ -155,7 +155,7 @@ func (s *Sender) Send(msg *Message, retries int) (*Response, error) {
 // updateStatus updates the status of the messages sent to devices and
 // returns the number of recoverable errors that could be retried.
 func updateStatus(msg *Message, resp *Response, allResults map[string]Result) int {
-	var unsentRegIDs = make([]string, 0, resp.Failure)
+	unsentRegIDs := make([]string, 0, resp.Failure)
 	for i := 0; i < len(resp.Results); i++ {
 		regID := msg.RegistrationIDs[i]
 		allResults[regID] = resp.Results[i]
