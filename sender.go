@@ -1,5 +1,3 @@
-// Copyright 2013 Alex Lockwood. All rights reserved.
-
 // Google Cloud Messaging for application servers implemented using the
 // Go programming language.
 package gcm

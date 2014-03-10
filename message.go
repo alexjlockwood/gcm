@@ -1,5 +1,3 @@
-// Copyright 2013 Alex Lockwood. All rights reserved.
-
 package gcm
 
 // Message is used by the application server to send a message to

@@ -1,5 +1,3 @@
-// Copyright 2013 Alex Lockwood. All rights reserved.
-
 package gcm
 
 // Response represents the GCM server's response to the application
