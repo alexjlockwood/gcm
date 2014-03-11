@@ -73,7 +73,7 @@ import (
 func handler(w http.ResponseWriter, r *http.Request) {
 	c := appengine.NewContext(r)
 	client := urlfetch.Client(c)
-	sender := &gcm.Sender(ApiKey: "sample_api_key", Http: client)
+	sender := &gcm.Sender{ApiKey: "sample_api_key", Http: client}
 
 	/* ... */
 }        
