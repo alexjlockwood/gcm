@@ -22,6 +22,9 @@ const (
 	maxBackoffDelay = 1024000
 )
 
+// Declared as a mutable variable for testing purposes.
+var gcmSendEndpoint = GcmSendEndpoint
+
 // Sender abstracts the interaction between the application server and the
 // GCM server. The developer must obtain an API key from the Google APIs
 // Console page and pass it to the Sender so that it can perform authorized
@@ -60,7 +63,7 @@ func (s *Sender) SendNoRetry(msg *Message) (*Response, error) {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", GcmSendEndpoint, bytes.NewBuffer(data))
+	req, err := http.NewRequest("POST", gcmSendEndpoint, bytes.NewBuffer(data))
 	if err != nil {
 		return nil, err
 	}
@@ -114,7 +117,7 @@ func (s *Sender) Send(msg *Message, retries int) (*Response, error) {
 	regIDs := msg.RegistrationIDs
 	allResults := make(map[string]Result, len(regIDs))
 	backoff := backoffInitialDelay
-	for i := 0; updateStatus(msg, resp, allResults) > 0 || i < retries; i++ {
+	for i := 0; updateStatus(msg, resp, allResults) > 0 && i < retries; i++ {
 		sleepTime := backoff/2 + rand.Intn(backoff)
 		time.Sleep(time.Duration(sleepTime) * time.Millisecond)
 		backoff = min(2*backoff, maxBackoffDelay)
