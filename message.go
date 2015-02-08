@@ -19,3 +19,27 @@ type Message struct {
 func NewMessage(data map[string]interface{}, regIDs ...string) *Message {
 	return &Message{RegistrationIDs: regIDs, Data: data}
 }
+
+func ProcessGcmResponse(gcmResponse *gcm.Response, gcmMessage *gcm.Message) (map[string]string, map[string]string, map[string]string) {
+	invalidDevices := make(map[string]string)
+	outdatedDevices := make(map[string]string)
+	successDevices := make(map[string]string)
+
+	for i, result := range gcmResponse.Results {
+		if result.MessageID != "" {
+			outdatedDevices[gcmMessage.RegistrationIDs[i]] = result.MessageID
+		}
+
+		// Looking for invalid device
+		if result.RegistrationID != "" {
+			outdatedDevices[gcmMessage.RegistrationIDs[i]] = result.RegistrationID
+		}
+
+		// Looking for invalid device
+		if result.Error != "" {
+			invalidDevices[gcmMessage.RegistrationIDs[i]] = result.Error
+		}
+	}
+
+	return invalidDevices, outdatedDevices, successDevices
+}
