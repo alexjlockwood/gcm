@@ -16,18 +16,18 @@ type Message struct {
 }
 
 type Notification struct {
-	title			string	`json:"title"`
-	body			string	`json:"body,omitempty"`
-	icon			string	`json:"icon,omitempty"`
-	sound			string	`json:"sound,omitempty"`
-	badge			string	`json:"badge,omitempty"`
-	tag				string	`json:"tag,omitempty"`
-	color			string	`json:"color,omitempty"`
-	clickAction		string	`json:"click_action,omitempty"`
-	bodyLocKey 		string	`json:"body_loc_key,omitempty"`
-	bodyLocArgs		string	`json:"body_loc_args,omitempty"`
-	titleLocKey 	string	`json:"title_loc_key,omitempty"`
-	titleLocArgs	string	`json:"title_loc_args,omitempty"`
+	Title			string	`json:"title"`
+	Body			string	`json:"body,omitempty"`
+	Icon			string	`json:"icon,omitempty"`
+	Sound			string	`json:"sound,omitempty"`
+	Badge			string	`json:"badge,omitempty"`
+	Tag				string	`json:"tag,omitempty"`
+	Color			string	`json:"color,omitempty"`
+	ClickAction		string	`json:"click_action,omitempty"`
+	BodyLocKey 		string	`json:"body_loc_key,omitempty"`
+	BodyLocArgs		string	`json:"body_loc_args,omitempty"`
+	TitleLocKey 	string	`json:"title_loc_key,omitempty"`
+	TitleLocArgs	string	`json:"title_loc_args,omitempty"`
 }
 
 // NewMessage returns a new Message with the specified payload

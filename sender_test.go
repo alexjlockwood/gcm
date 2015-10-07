@@ -105,7 +105,7 @@ func TestNotificationCreation(t *testing.T) {
 	server := startTestServer(t, &testResponse{Response: &Response{}})
 	defer server.Close()
 	sender := &Sender{ApiKey: "test"}
-	msg := NewMessageWithNotification(map[string]interface{}{"key": "value"}, Notification{title: "title", body: "body"}, "1")
+	msg := NewMessageWithNotification(map[string]interface{}{"key": "value"}, Notification{Title: "title", Body: "body"}, "1")
 	if _, err := sender.SendNoRetry(msg); err != nil {
 		t.Fatalf("test failed with error: %s", err)
 	}
