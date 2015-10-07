@@ -38,9 +38,14 @@ import (
 func main() {
 	// Create the message to be sent.
 	data := map[string]interface{}{"score": "5x1", "time": "15:10"}
-	notification := map[string]interface{}{"title": "Notification Title", "message": "This is the body of the notification"}
 	regIDs := []string{"4", "8", "15", "16", "23", "42"}
-	msg := gcm.NewMessage(data, regIDs..., notification)
+	msg := gcm.NewMessage(data, regIDs...)
+	
+	// or with notification
+	data := map[string]interface{}{"score": "5x1", "time": "15:10"}
+	regIDs := []string{"4", "8", "15", "16", "23", "42"}
+	notification := Notification{title: "Notification Title", body: "This is the body of the notification", icon: "myicon"}
+	msg := gcm.NewMessageWithNotification(data, notification regIDs...)
 
 	// Create a Sender to send the message.
 	sender := &gcm.Sender{ApiKey: "sample_api_key"}
