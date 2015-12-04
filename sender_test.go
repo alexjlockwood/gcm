@@ -43,7 +43,7 @@ func startTestServer(t *testing.T, responses ...*testResponse) *httptest.Server 
 func TestSendNoRetryInvalidApiKey(t *testing.T) {
 	server := startTestServer(t)
 	defer server.Close()
-	sender := &Sender{APIKey: ""}
+	sender := &Client{APIKey: ""}
 	if _, _, err := sender.send(&Message{RegistrationIDs: []string{"1"}}); err == nil {
 		t.Fatal("test should fail when sender's ApiKey is \"\"")
 	}
@@ -52,7 +52,7 @@ func TestSendNoRetryInvalidApiKey(t *testing.T) {
 func TestSendInvalidApiKey(t *testing.T) {
 	server := startTestServer(t)
 	defer server.Close()
-	sender := &Sender{APIKey: ""}
+	sender := &Client{APIKey: ""}
 	if _, err := sender.Send(&Message{RegistrationIDs: []string{"1"}}); err == nil {
 		t.Fatal("test should fail when sender's ApiKey is \"\"")
 	}

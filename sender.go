@@ -23,10 +23,15 @@ const (
 	apiMethod = "POST"
 )
 
+// Sender functions for sending messages to GCM
+type Sender interface {
+	Send(m *Message) (*Response, error)
+}
+
 // Declared as a mutable variable for testing purposes.
 var gcmSendEndpoint = GcmSendEndpoint
 
-// Sender abstracts the interaction between the application server and the
+// Client abstracts the interaction between the application server and the
 // GCM server. The developer must obtain an API key from the Google APIs
 // Console page and pass it to the Sender so that it can perform authorized
 // requests on the application server's behalf. To send a message to one or
@@ -43,25 +48,25 @@ var gcmSendEndpoint = GcmSendEndpoint
 //
 //		/* ... */
 //	}
-type Sender struct {
+type Client struct {
 	APIKey     string
 	RetryCount int
 	HTTPClient *http.Client
 }
 
 // NewSender creates a new Sender and sets a timeout on the http.Client
-func NewSender(apiKey string, retryCount int, timeout time.Duration) *Sender {
+func NewSender(apiKey string, retryCount int, timeout time.Duration) *Client {
 	httpClient := new(http.Client)
 	httpClient.Timeout = timeout
-	return &Sender{
+	return &Client{
 		APIKey:     apiKey,
 		RetryCount: retryCount,
 		HTTPClient: httpClient,
 	}
 }
 
-func (s *Sender) send(m *Message) (*Response, int, error) {
-	if err := s.Validate(); err != nil {
+func (c *Client) send(m *Message) (*Response, int, error) {
+	if err := c.validate(); err != nil {
 		return nil, -1, err
 	} else if m == nil {
 		return nil, -1, errors.New("Message cannot be nil")
@@ -73,9 +78,9 @@ func (s *Sender) send(m *Message) (*Response, int, error) {
 	if err != nil {
 		return nil, -1, err
 	}
-	req.Header.Add("Authorization", fmt.Sprintf("key=%s", s.APIKey))
+	req.Header.Add("Authorization", fmt.Sprintf("key=%s", c.APIKey))
 
-	resp, err := s.HTTPClient.Do(req)
+	resp, err := c.HTTPClient.Do(req)
 	if err != nil {
 		return nil, -1, err
 	}
@@ -117,14 +122,14 @@ func (s *Sender) send(m *Message) (*Response, int, error) {
 // Send sends a message to the GCM server, retrying in case of
 // service unavailability. A non-nil error is returned if a non-recoverable
 // error occurs (i.e. if the response status is not "200 OK").
-func (s *Sender) Send(m *Message) (*Response, error) {
-	r, backoff, err := s.send(m)
+func (c Client) Send(m *Message) (*Response, error) {
+	r, backoff, err := c.send(m)
 	if err != nil {
 		return r, err
 	}
-	for i := 0; i < s.RetryCount; i++ {
+	for i := 0; i < c.RetryCount; i++ {
 		time.Sleep(time.Second * time.Duration(2<<uint(backoff*i)))
-		r, backoff, err = s.send(m)
+		r, backoff, err = c.send(m)
 		if err != nil {
 			return r, err
 		}
@@ -136,9 +141,9 @@ func (s *Sender) Send(m *Message) (*Response, error) {
 	return r, errors.New("Retry limit exceeded")
 }
 
-// Validate returns an error if the sender is not well-formed
-func (s *Sender) Validate() error {
-	if s.APIKey == "" {
+// validate returns an error if the sender is not well-formed
+func (c Client) validate() error {
+	if c.APIKey == "" {
 		return errors.New("the sender's API key must not be empty")
 	}
 	return nil
