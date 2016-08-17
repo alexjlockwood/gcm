@@ -14,16 +14,14 @@ import (
 )
 
 const (
-	// GcmSendEndpoint is the endpoint for sending messages to the GCM server.
-	GcmSendEndpoint = "https://android.googleapis.com/gcm/send"
 	// Initial delay before first retry, without jitter.
 	backoffInitialDelay = 1000
 	// Maximum delay before a retry.
 	maxBackoffDelay = 1024000
 )
 
-// Declared as a mutable variable for testing purposes.
-var gcmSendEndpoint = GcmSendEndpoint
+// GcmSendEndpoint is the endpoint for sending messages to the GCM server.
+var GcmSendEndpoint = "https://android.googleapis.com/gcm/send"
 
 // Sender abstracts the interaction between the application server and the
 // GCM server. The developer must obtain an API key from the Google APIs
@@ -63,7 +61,7 @@ func (s *Sender) SendNoRetry(msg *Message) (*Response, error) {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", gcmSendEndpoint, bytes.NewBuffer(data))
+	req, err := http.NewRequest("POST", GcmSendEndpoint, bytes.NewBuffer(data))
 	if err != nil {
 		return nil, err
 	}

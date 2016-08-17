@@ -31,7 +31,7 @@ func startTestServer(t *testing.T, responses ...*testResponse) *httptest.Server 
 		i++
 	}
 	server := httptest.NewServer(http.HandlerFunc(handler))
-	gcmSendEndpoint = server.URL
+	GcmSendEndpoint = server.URL
 	return server
 }
 
