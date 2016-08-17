@@ -21,7 +21,7 @@ const (
 )
 
 // GcmSendEndpoint is the endpoint for sending messages to the GCM server.
-var GcmSendEndpoint = "https://android.googleapis.com/gcm/send"
+var GcmSendEndpoint = "https://fcm.googleapis.com/fcm/send"
 
 // Sender abstracts the interaction between the application server and the
 // GCM server. The developer must obtain an API key from the Google APIs
