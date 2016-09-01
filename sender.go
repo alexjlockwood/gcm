@@ -125,6 +125,10 @@ func (c Client) Send(m *Message) (*Response, error) {
 	if err != nil {
 		return r, err
 	}
+	if backoff == 0 {
+		return r, nil
+	}
+
 	for i := 0; i < c.RetryCount; i++ {
 		time.Sleep(time.Second * time.Duration(2<<uint(backoff*i)))
 		r, backoff, err = c.send(m)
