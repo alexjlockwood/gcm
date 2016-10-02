@@ -27,6 +27,7 @@ type Message struct {
 	RestrictedPackageName string                 `json:"restricted_package_name,omitempty"`
 	DryRun                bool                   `json:"dry_run,omitempty"`
 	Priority              Priority               `json:"priority,omitempty"`
+	Notification          map[string]interface{} `json:"notification,omitempty"`
 }
 
 // NewMessage returns a new Message with the specified payload
