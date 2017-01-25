@@ -75,6 +75,9 @@ func TestSendNoRetryInvalidMessage(t *testing.T) {
 	if _, err := sender.SendNoRetry(&Message{RegistrationIDs: []string{"1"}, TimeToLive: 2419201}); err == nil {
 		t.Fatal("test should fail when message TimeToLive field is greater than 2419200")
 	}
+	if _, err := sender.SendNoRetry(&Message{RegistrationIDs: []string{"1"}, Priority: "invalid"}); err == nil {
+		t.Fatal("test should fail when priority value is not high or normal")
+	}
 }
 
 func TestSendInvalidMessage(t *testing.T) {
@@ -98,6 +101,9 @@ func TestSendInvalidMessage(t *testing.T) {
 	}
 	if _, err := sender.Send(&Message{RegistrationIDs: []string{"1"}, TimeToLive: 2419201}, 0); err == nil {
 		t.Fatal("test should fail when message TimeToLive field is greater than 2419200")
+	}
+	if _, err := sender.Send(&Message{RegistrationIDs: []string{"1"}, Priority: "invalid"}, 0); err == nil {
+		t.Fatal("test should fail when priority value is not high or normal")
 	}
 }
 
@@ -158,5 +164,16 @@ func TestSendOneRetryNonrecoverableFailure(t *testing.T) {
 	msg := NewMessage(map[string]interface{}{"key": "value"}, "1")
 	if _, err := sender.Send(msg, 1); err == nil {
 		t.Fatal("send should fail after one retry")
+	}
+}
+
+func TestSendWithPrioritySuccess(t *testing.T) {
+	server := startTestServer(t, &testResponse{Response: &Response{}})
+	defer server.Close()
+	sender := &Sender{ApiKey: "test"}
+	msg := NewMessage(map[string]interface{}{"key": "value"}, "1")
+	msg.Priority = HighPriority
+	if _, err := sender.SendNoRetry(msg); err != nil {
+		t.Fatalf("test failed with error: %s", err)
 	}
 }

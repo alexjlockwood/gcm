@@ -1,5 +1,12 @@
 package gcm
 
+const (
+	//HighPriority represent high value for priority field
+	HighPriority = "high"
+	//NormalPriority represent normal value for priority field
+	NormalPriority = "normal"
+)
+
 // Message is used by the application server to send a message to
 // the GCM server. See the documentation for GCM Architectural
 // Overview for more information:
@@ -12,6 +19,7 @@ type Message struct {
 	TimeToLive            int                    `json:"time_to_live,omitempty"`
 	RestrictedPackageName string                 `json:"restricted_package_name,omitempty"`
 	DryRun                bool                   `json:"dry_run,omitempty"`
+	Priority              string                 `json:"priority,omitempty"`
 }
 
 // NewMessage returns a new Message with the specified payload
