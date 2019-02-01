@@ -1,3 +1,13 @@
+fcm
+===
+
+本リポジトリは、GCMのサービス終了に伴い[alexjlockwood/gcm](https://github.com/alexjlockwood/gcm)のサービスエンドポイントをGCMからFCMに変更する目的でフォークされたリポジトリである。
+
+
+以下、元リポジトリのREADME。
+
+--- 
+
 gcm
 ===
 
