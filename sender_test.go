@@ -1,4 +1,4 @@
-package gcm
+package fcm
 
 import (
 	"encoding/json"
@@ -31,7 +31,7 @@ func startTestServer(t *testing.T, responses ...*testResponse) *httptest.Server 
 		i++
 	}
 	server := httptest.NewServer(http.HandlerFunc(handler))
-	gcmSendEndpoint = server.URL
+	fcmSendEndpoint = server.URL
 	return server
 }
 

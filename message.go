@@ -1,4 +1,4 @@
-package gcm
+package fcm
 
 // Message is used by the application server to send a message to
 // the GCM server. See the documentation for GCM Architectural

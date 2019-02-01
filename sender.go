@@ -1,6 +1,6 @@
 // Google Cloud Messaging for application servers implemented using the
 // Go programming language.
-package gcm
+package fcm
 
 import (
 	"bytes"
@@ -14,6 +14,8 @@ import (
 )
 
 const (
+	// FcmSendEndpoint is the endpoint for sending messages to the FCM server.
+	FcmSendEndpoint = "https://fcm.googleapis.com/fcm/send"
 	// GcmSendEndpoint is the endpoint for sending messages to the GCM server.
 	GcmSendEndpoint = "https://android.googleapis.com/gcm/send"
 	// Initial delay before first retry, without jitter.
@@ -23,7 +25,10 @@ const (
 )
 
 // Declared as a mutable variable for testing purposes.
-var gcmSendEndpoint = GcmSendEndpoint
+var (
+	gcmSendEndpoint = GcmSendEndpoint
+	fcmSendEndpoint = FcmSendEndpoint
+)
 
 // Sender abstracts the interaction between the application server and the
 // GCM server. The developer must obtain an API key from the Google APIs
@@ -63,7 +68,7 @@ func (s *Sender) SendNoRetry(msg *Message) (*Response, error) {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", gcmSendEndpoint, bytes.NewBuffer(data))
+	req, err := http.NewRequest("POST", fcmSendEndpoint, bytes.NewBuffer(data))
 	if err != nil {
 		return nil, err
 	}
