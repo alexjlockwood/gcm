@@ -1,31 +1,29 @@
-gcm
+Fcm Http client
 ===
 
-## NOTE: I no longer maintain this library. Feel free to fork! :)
+Library uses legacy http protocol for sending messages to devices using device token: https://firebase.google.com/docs/cloud-messaging/send-message#send_messages_using_the_legacy_app_server_protocols
 
-The Android SDK provides a nice convenience library ([com.google.android.gcm.server](https://github.com/google/gcm/tree/master/client-libraries/java/rest-client/src/com/google/android/gcm/server)) that greatly simplifies the interaction between Java-based application servers and Google's GCM servers. However, Google has not provided much support for application servers implemented in languages other than Java, specifically those written in the Go programming language. The `gcm` package helps to fill in this gap, providing a simple interface for sending GCM messages and automatically retrying requests in case of service unavailability.
-
-Documentation: http://godoc.org/github.com/alexjlockwood/gcm
+Documentation for initial gcm library, which was replaced with FCM by changing message endpoint: http://godoc.org/github.com/alexjlockwood/gcm
 
 Getting Started
 ---------------
 
-To install gcm, use `go get`:
+To install use `go get`:
 
 ```bash
-go get github.com/alexjlockwood/gcm
+go get github.com/Smarp/fcm-http
 ```
 
-Import gcm with the following:
+Import with the following:
 
 ```go
-import "github.com/alexjlockwood/gcm"
+import "github.com/Smarp/fcm-http"
 ```
 
 Sample Usage
 ------------
 
-Here is a quick sample illustrating how to send a message to the GCM server:
+Here is a quick sample illustrating how to send a message to the FCM server:
 
 ```go
 package main
@@ -34,17 +32,17 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/alexjlockwood/gcm"
+	fcm "github.com/Smarp/fcm-http"
 )
 
 func main() {
 	// Create the message to be sent.
 	data := map[string]interface{}{"score": "5x1", "time": "15:10"}
 	regIDs := []string{"4", "8", "15", "16", "23", "42"}
-	msg := gcm.NewMessage(data, regIDs...)
+	msg := fcm.NewMessage(data, regIDs...)
 
 	// Create a Sender to send the message.
-	sender := &gcm.Sender{ApiKey: "sample_api_key"}
+	sender := &fcm.Sender{ApiKey: "sample_api_key"}
 
 	// Send the message and receive the response after at most two retries.
 	response, err := sender.Send(msg, 2)
@@ -69,13 +67,13 @@ import (
 	"appengine"
 	"appengine/urlfetch"
 
-	"github.com/alexjlockwood/gcm"
+	fcm "github.com/Smarp/fcm-http"
 )
 
 func handler(w http.ResponseWriter, r *http.Request) {
 	c := appengine.NewContext(r)
 	client := urlfetch.Client(c)
-	sender := &gcm.Sender{ApiKey: "sample_api_key", Http: client}
+	sender := &fcm.Sender{ApiKey: "sample_api_key", Http: client}
 
 	/* ... */
 }        

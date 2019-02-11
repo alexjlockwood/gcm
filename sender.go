@@ -1,6 +1,4 @@
-// Google Cloud Messaging for application servers implemented using the
-// Go programming language.
-package gcm
+package fcm
 
 import (
 	"bytes"
@@ -14,8 +12,8 @@ import (
 )
 
 const (
-	// GcmSendEndpoint is the endpoint for sending messages to the GCM server.
-	GcmSendEndpoint = "https://android.googleapis.com/gcm/send"
+	// FcmEndpoint is the endpoint for sending messages to the FCM server.
+	FcmEndpoint = "https://fcm.googleapis.com/fcm/send"
 	// Initial delay before first retry, without jitter.
 	backoffInitialDelay = 1000
 	// Maximum delay before a retry.
@@ -23,32 +21,14 @@ const (
 )
 
 // Declared as a mutable variable for testing purposes.
-var gcmSendEndpoint = GcmSendEndpoint
+var fcmEndpoint = FcmEndpoint
 
-// Sender abstracts the interaction between the application server and the
-// GCM server. The developer must obtain an API key from the Google APIs
-// Console page and pass it to the Sender so that it can perform authorized
-// requests on the application server's behalf. To send a message to one or
-// more devices use the Sender's Send or SendNoRetry methods.
-//
-// If the Http field is nil, a zeroed http.Client will be allocated and used
-// to send messages. If your application server runs on Google AppEngine,
-// you must use the "appengine/urlfetch" package to create the *http.Client
-// as follows:
-//
-//	func handler(w http.ResponseWriter, r *http.Request) {
-//		c := appengine.NewContext(r)
-//		client := urlfetch.Client(c)
-//		sender := &gcm.Sender{ApiKey: key, Http: client}
-//
-//		/* ... */
-//	}
 type Sender struct {
 	ApiKey string
 	Http   *http.Client
 }
 
-// SendNoRetry sends a message to the GCM server without retrying in case of
+// SendNoRetry sends a message to the FCM server without retrying in case of
 // service unavailability. A non-nil error is returned if a non-recoverable
 // error occurs (i.e. if the response status is not "200 OK").
 func (s *Sender) SendNoRetry(msg *Message) (*Response, error) {
@@ -63,7 +43,7 @@ func (s *Sender) SendNoRetry(msg *Message) (*Response, error) {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", gcmSendEndpoint, bytes.NewBuffer(data))
+	req, err := http.NewRequest("POST", fcmEndpoint, bytes.NewBuffer(data))
 	if err != nil {
 		return nil, err
 	}
@@ -90,7 +70,7 @@ func (s *Sender) SendNoRetry(msg *Message) (*Response, error) {
 	return response, err
 }
 
-// Send sends a message to the GCM server, retrying in case of service
+// Send sends a message to the FCM server, retrying in case of service
 // unavailability. A non-nil error is returned if a non-recoverable
 // error occurs (i.e. if the response status is not "200 OK").
 //
