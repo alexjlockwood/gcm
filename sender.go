@@ -15,7 +15,8 @@ import (
 
 const (
 	// GcmSendEndpoint is the endpoint for sending messages to the GCM server.
-	GcmSendEndpoint = "https://android.googleapis.com/gcm/send"
+	// DT: Replaced GCM endpoint with FCM. Al other references remain the same
+	GcmSendEndpoint = "https://fcm.googleapis.com/fcm/send"
 	// Initial delay before first retry, without jitter.
 	backoffInitialDelay = 1000
 	// Maximum delay before a retry.
@@ -24,6 +25,24 @@ const (
 
 // Declared as a mutable variable for testing purposes.
 var gcmSendEndpoint = GcmSendEndpoint
+
+// Errors
+type JSONParseError struct{ error }
+type UnauthorizedError struct{ error }
+type UnknownError struct{ error }
+
+const (
+	ResponseErrorMissingRegistration = "MissingRegistration"
+	ResponseErrorInvalidRegistration = "InvalidRegistration"
+	ResponseErrorMismatchSenderID    = "MismatchSenderId"
+	ResponseErrorNotRegistered       = "NotRegistered"
+	ResponseErrorMessageTooBig       = "MessageTooBig"
+	ResponseErrorInvalidDataKey      = "InvalidDataKey"
+	ResponseErrorInvalidTTL          = "InvalidTtl"
+	ResponseErrorUnavailable         = "Unavailable"
+	ResponseErrorInternalServerError = "InternalServerError"
+	ResponseErrorInvalidPackageName  = "InvalidPackageName"
+)
 
 // Sender abstracts the interaction between the application server and the
 // GCM server. The developer must obtain an API key from the Google APIs
@@ -76,8 +95,14 @@ func (s *Sender) SendNoRetry(msg *Message) (*Response, error) {
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("%d error: %s", resp.StatusCode, resp.Status)
+	switch resp.StatusCode {
+	case http.StatusBadRequest:
+		return nil, JSONParseError{fmt.Errorf("%d error: %s", resp.StatusCode, resp.Status)}
+	case http.StatusUnauthorized:
+		return nil, UnauthorizedError{fmt.Errorf("%d error: %s", resp.StatusCode, resp.Status)}
+	case http.StatusOK:
+	default:
+		return nil, UnknownError{fmt.Errorf("%d error: %s", resp.StatusCode, resp.Status)}
 	}
 
 	body, err := ioutil.ReadAll(resp.Body)
