@@ -16,7 +16,7 @@ import (
 )
 
 const (
-	// GcmSendEndpoint is the endpoint for sending messages to the GCM server.
+	// FcmSendEndpoint is the endpoint for sending messages to the FCM server.
 	FcmSendEndpoint = "https://fcm.googleapis.com/fcm/send"
 	// Initial delay before first retry, without jitter.
 	backoffInitialDelay = 1000
@@ -65,10 +65,9 @@ func (s *Sender) SendNoRetry(msg *Message) (*Response, error) {
 		return nil, err
 	}
 
-	glog.Infof("the msg to be sent to fcm: %v\n", msg)
+	glog.Infof("msg to send to fcm: %v\n", msg)
 	req, err := http.NewRequest("POST", fcmSendEndpoint, bytes.NewBuffer(data))
 	if err != nil {
-		glog.Errorf("error creating http request: %v\n", err)
 		return nil, err
 	}
 	req.Header.Add("Authorization", fmt.Sprintf("key=%s", s.ApiKey))
@@ -76,7 +75,6 @@ func (s *Sender) SendNoRetry(msg *Message) (*Response, error) {
 
 	resp, err := s.Http.Do(req)
 	if err != nil {
-		glog.Errorf("error making http request: %v\n", err)
 		return nil, err
 	}
 	defer resp.Body.Close()
