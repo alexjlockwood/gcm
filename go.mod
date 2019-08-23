@@ -1,4 +1,4 @@
-module github.com/flybits/gcm-legacy
+module github.com/flybits/gcm-go
 
 go 1.12
 
