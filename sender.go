@@ -186,6 +186,8 @@ func checkMessage(msg *Message) error {
 	} else if msg.TimeToLive < 0 || 2419200 < msg.TimeToLive {
 		return errors.New("the message's TimeToLive field must be an integer " +
 			"between 0 and 2419200 (4 weeks)")
+	} else if msg.Notification == nil {
+		return errors.New("the notification must not be nil")
 	}
 	return nil
 }
