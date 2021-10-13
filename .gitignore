@@ -1,0 +1,14 @@
+# Compiled files
+main
+gcm
+gcm-*
+
+# Test files
+*.log
+*.out
+*.test
+*.html
+
+# Exceptions
+!Dockerfile.test
+.idea/

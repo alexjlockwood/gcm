@@ -116,6 +116,8 @@ func (s *Sender) Send(msg *Message, retries int) (*Response, error) {
 		return resp, nil
 	}
 
+	glog.Infof("At least one token failed")
+
 	// One or more messages failed to send.
 	regIDs := msg.RegistrationIDs
 	allResults := make(map[string]Result, len(regIDs))
@@ -129,6 +131,7 @@ func (s *Sender) Send(msg *Message, retries int) (*Response, error) {
 			return nil, err
 		}
 	}
+	glog.Infof("Done with Retry")
 
 	// Bring the message back to its original state.
 	msg.RegistrationIDs = regIDs
@@ -167,6 +170,8 @@ func updateStatus(msg *Message, resp *Response, allResults map[string]Result) in
 		regID := msg.RegistrationIDs[i]
 		allResults[regID] = resp.Results[i]
 		if resp.Results[i].Error == "Unavailable" {
+			unsentRegIDs = append(unsentRegIDs, regID)
+		}else if resp.Results[i].Error == "NotRegistered" {
 			unsentRegIDs = append(unsentRegIDs, regID)
 		}
 	}
